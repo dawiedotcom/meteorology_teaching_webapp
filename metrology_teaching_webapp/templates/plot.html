@@ -1,0 +1,24 @@
+{% set page = namespace(path = '/') %}
+{% extends "base.html" %}
+
+<!-- Body -->
+{% block content %}
+
+<!--
+<img src=" url_for('static/figures/' + args['date'] + '/' + args['region'] + '/' + args['show_pressure'] + '/' + args['size'] + '.png' ) " />
+
+-->
+
+<img src="{{ url_for( 'static', filename='/figures/' + args['date'] + '/' + args['region'] + '/' + args['show_pressure'] + '/a3.png')  }}" />
+
+{% endblock %}
+
+<!-- CSS -->
+{% block css %}
+
+{% endblock %}
+
+<!-- JS -->
+{% block scripts %}
+
+{% endblock %}
