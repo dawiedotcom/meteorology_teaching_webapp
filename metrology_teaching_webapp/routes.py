@@ -52,6 +52,8 @@ def plot(date, region, show_pressure, size):
     # Calculate figure size
     if size == 'a4':
         figsize = (11.69, 16.53/2)
+    elif size == 'web':
+        figsize = (4, 6)
     else: # 'a3' by default:
         figsize = (11.69, 16.53)
 

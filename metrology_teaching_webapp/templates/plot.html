@@ -9,7 +9,11 @@
 
 -->
 
-<img src="{{ url_for( 'static', filename='/figures/' + args['date'] + '/' + args['region'] + '/' + args['show_pressure'] + '/a3.png')  }}" />
+<div class="container">
+  <div class="row" style="text-align: center">
+    <img style="width:10%" src="{{ url_for( 'static', filename='/figures/' + args['date'] + '/' + args['region'] + '/' + args['show_pressure'] + '/' + args['size'] + '.png')  }}" />
+  </div>
+</div>
 
 {% endblock %}
 
