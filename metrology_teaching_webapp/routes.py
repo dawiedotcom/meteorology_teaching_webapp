@@ -28,19 +28,20 @@ def index():
     )
 
 
-@app.route('/plot/<date>/<region>/<show_pressure>/<size>')
-def plot(date, region, show_pressure, size):
+@app.route('/plot/<date>/<hour>/<region>/<show_pressure>/<size>')
+def plot(date, hour, region, show_pressure, size):
     print(date)
+    args = dict(date=date, hour=hour, region=region, show_pressure=show_pressure, size=size)
 
     ## Generate the file name
-    fig_filename = os.path.join(app.root_path, f'static/figures/{date}/{region}/{show_pressure}/{size}.png')
+    fig_filename = os.path.join(app.root_path, f'static/figures/{date}/{hour}/{region}/{show_pressure}/{size}.png')
 
     ## Early exit if the figure exits
     if os.path.exists(fig_filename):
         return render_template(
             "plot.html",
             navigation=menu_items(),
-            args=dict(date=date, region=region, show_pressure=show_pressure, size=size),
+            args=args,
         )
 
     ## Create it's direcotry if it does not exist
@@ -50,12 +51,12 @@ def plot(date, region, show_pressure, size):
 
     ## Plot the figure
     # Calculate figure size
-    if size == 'a4':
-        figsize = (11.69, 16.53/2)
-    elif size == 'web':
-        figsize = (4, 6)
-    else: # 'a3' by default:
-        figsize = (11.69, 16.53)
+    # 'a3' by default:
+    figsize = (11.69, 16.53)
+    #if size == 'a4':
+    #    figsize = (11.69, 16.53/2)
+    #elif size == 'web':
+    #    figsize = (4, 6)
 
     # Calculate the region
     # Default UK and Ireland
@@ -65,18 +66,12 @@ def plot(date, region, show_pressure, size):
     figpressure = show_pressure == 'with_pressure'
 
     # Parse time selection to Pandas.Time stamp
-    year, month, day = [int(part) for part in date.split('-')]
-    figdate = pd.Timestamp(
-        year=year,
-        month=month,
-        day=day,
-    )
+    figdate = pd.Timestamp(f'{date}T{hour}')
 
     # Retrieve the data
     synops_to_plot, pressure = read_synops(
         figdate, 
         region=figregion, 
-    #    nocache=args.nocache, 
         use_midas_csv=False,
         get_pressure=figpressure,
     )
@@ -84,7 +79,6 @@ def plot(date, region, show_pressure, size):
     fig_map_synop,ax = plot_synops(
         synops_to_plot, 
         pressure, 
-    #    thin=args.thin, 
         figsize=figsize,
         region=figregion,
     )
@@ -96,5 +90,5 @@ def plot(date, region, show_pressure, size):
     return render_template(
         "plot.html",
         navigation=menu_items(),
-        args=dict(date=date, region=region, show_pressure=show_pressure, size=size),
+        args=args,
     )
