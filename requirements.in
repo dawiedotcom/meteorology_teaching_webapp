@@ -1,5 +1,0 @@
-gunicorn
-Flask
-Flask_FlatPages
-#git+https://github.com/SimonTett/Meteorology_teaching.git
-/home/dawie/work/met_teaching_web_app/Meteorology_teaching

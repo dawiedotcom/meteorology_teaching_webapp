@@ -4,7 +4,15 @@ version = "0.1.0"
 description = "Web front end for https://github.com/SimonTett/Meteorology_teaching"
 readme = "README.md"
 requires-python = ">=3.10"
-#dependencies = []
+dependencies = [
+    "Flask",
+    "gunicorn",
+    "Flask_FlatPages",
+    "plot-synops@git+https://github.com/dawiedotcom/Meteorology_teaching@package",
+    # TODO: move to dependancies of Meteorology_teaching
+    "cdsapi",
+    "setuptools",
+]
 
 [build-system]
 requires = ["hatchling"]

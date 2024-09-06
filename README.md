@@ -6,7 +6,7 @@ Web front end for [Metrology_teaching](https://github.com/SimonTett/Meteorology_
 ```bash
 uv venv
 . .venv/bin/activate
-uv pip compile requirements.in -o requirements.txt
+uv pip compile pyproject.toml -o requirements.txt
 uv pip install -r requirements.txt
 ```
 
