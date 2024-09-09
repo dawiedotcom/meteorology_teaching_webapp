@@ -6,15 +6,27 @@ Web front end for [Metrology_teaching](https://github.com/SimonTett/Meteorology_
 ```bash
 uv venv
 . .venv/bin/activate
-uv pip compile pyproject.toml -o requirements.txt
 uv pip install -r requirements.txt
 ```
 
-## Setup with `pip`
+## Setup with `virtualenv`
+
+```bash
+virtualenv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+```
 
 ## Running
 
 ```bash
-. .nvenv/bin/activate
+. .venv/bin/activate
 ./run_gunicorn.sh
+```
+
+## Update requirements.txt
+
+Add dependancies in [pyproject.toml](pyproject.toml), then run:
+```bash
+uv pip compile pyproject.toml -o requirements.txt
 ```
