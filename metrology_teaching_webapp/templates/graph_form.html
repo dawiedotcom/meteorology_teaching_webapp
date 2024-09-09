@@ -8,7 +8,7 @@
       <!-- Date -->
       <div class="mb-3">
         <label for="date" class="form-label">Date</label>
-        <input id="date" class="form-control" type="date" onchange="onFormInputChange()"/>
+        <input id="date" class="form-control" type="date" onchange="onDateInputChange()"/>
       </div>
 
       <!-- Time -->
@@ -16,30 +16,6 @@
         <label for="time" class="form-label">Date</label>
 	<!--<input id="time" class="form-control" type="time" onchange="onFormInputChange()"/>-->
         <select class="form-select" aria-label=".form-select" id="time" onchange="onFormInputChange()">
-          <option value="00">00</option>
-          <option value="01">01</option>
-          <option value="02">02</option>
-          <option value="03">03</option>
-          <option value="04">04</option>
-          <option value="05">05</option>
-          <option value="06">06</option>
-          <option value="07">07</option>
-          <option value="08">08</option>
-          <option value="09">09</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-          <option value="16">16</option>
-          <option value="17">17</option>
-          <option value="18">18</option>
-          <option value="19">19</option>
-          <option value="20">20</option>
-          <option value="21">21</option>
-          <option value="22">22</option>
-          <option value="23">23</option>
         </select>
 
       </div>
@@ -89,9 +65,34 @@
 {% block scripts %}
 <script>
 
+const today = new Date().toISOString().split("T")[0];
+const hour = parseInt(new Date().toISOString().split("T")[1].split(":")[0]);
+
 function get_element(id) {
   // Wrapper for document.getElementById
   return document.getElementById(id) || null;
+}
+
+function onDateInputChange() {
+  var frm = get_element('plot-form');
+  var date_picker = get_element('date');
+  var time_picker = get_element('time');
+
+  if( frm && date_picker && time_picker ) {
+
+    while (time_picker.firstChild)
+      time_picker.removeChild(time_picker.lastChild);
+
+    const maxHour = (date_picker.value == today) ? (hour - 1) : 23;
+    for (var h=0; h<=maxHour; h++) {
+        var option = document.createElement("option");
+        option.text = String(h);
+        option.value = String(h).padStart(2, "0");
+        time_picker.appendChild(option);
+    }
+
+  }
+  onFormInputChange();
 }
 
 function onFormInputChange() {
@@ -102,7 +103,8 @@ function onFormInputChange() {
   var region = get_element('region');
   var size = get_element('size');
   var show_pressure = get_element('show_pressure');
-  if( frm && date_picker && region && size && show_pressure ) {
+
+  if( frm && date_picker && region && size && show_pressure && time_picker ) {
     frm.action = "{{ url_for('index') }}" 
       + "plot/" 
       + date.value + "/" 
@@ -116,7 +118,7 @@ function onFormInputChange() {
 // Disable dates later than today
 datePicker = get_element('date');
 if (datePicker) {
-  datePicker.max = new Date().toISOString().split("T")[0];
+  datePicker.max = today;
 }
 
 </script>
