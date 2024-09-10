@@ -14,32 +14,38 @@
       <!-- Time -->
       <div class="mb-3">
         <label for="time" class="form-label">Date</label>
-	<!--<input id="time" class="form-control" type="time" onchange="onFormInputChange()"/>-->
+  <!--<input id="time" class="form-control" type="time" onchange="onFormInputChange()"/>-->
         <select class="form-select" aria-label=".form-select" id="time" onchange="onFormInputChange()">
         </select>
 
       </div>
-    
+
       <!-- Region -->
       <div class="mb-3">
         <label for="size" class="form-label">Region</label>
         <select class="form-select" aria-label=".form-select" id="region" onchange="onFormInputChange()">
-          <option selected value="uk_ireland">UK and Ireland</option>
+          <option selected value="gb_ireland">Great Brittan and Ireland</option>
           <option value="scotland">Scotland</option>
         </select>
       </div>
-    
+
+      <!-- Thinning distance -->
+      <div class="mb-3">
+        <label class="form-label" for="thin_distance">Thinning Distance (in km)</label>
+        <input class="form-input" type="number" min="10" max="100" value="40" id="thin_distance" checked onchange="onFormInputChange()">
+      </div>
+
       <!-- Plot Pressure -->
       <div class="mb-3">
-        <label class="form-check-label" for="flexCheckChecked">Plot Pressure</label>
-	<input class="form-check-input" type="checkbox" value="" id="show_pressure" checked onchange="onFormInputChange()">
+        <label class="form-check-label" for="show_pressure">Plot Pressure</label>
+        <input class="form-check-input" type="checkbox" value="" id="show_pressure" checked onchange="onFormInputChange()">
       </div>
-    
+
       <!-- Figure Size -->
       <!--
       <div class="mb-3">
         <label for="size" class="form-label">Size</label>
-	<select class="form-select" aria-label=".form-select" id="size" onchange="onFormInputChange()">
+        <select class="form-select" aria-label=".form-select" id="size" onchange="onFormInputChange()">
           <option selected value="web">Web</option>
           <option value="a4">A4</option>
           <option value="a3">A3</option>
@@ -47,7 +53,7 @@
       </div>
       -->
       <input type="hidden" id="size" value="a3"/>
-    
+
       <!-- Submit -->
       <button class="btn btn-primary" type="submit">Plot</button>
     </form>
@@ -83,7 +89,7 @@ function onDateInputChange() {
     while (time_picker.firstChild)
       time_picker.removeChild(time_picker.lastChild);
 
-    const maxHour = (date_picker.value == today) ? (hour - 1) : 23;
+    const maxHour = (date_picker.value == today) ? (hour) : 23;
     for (var h=0; h<=maxHour; h++) {
         var option = document.createElement("option");
         option.text = String(h);
@@ -103,22 +109,30 @@ function onFormInputChange() {
   var region = get_element('region');
   var size = get_element('size');
   var show_pressure = get_element('show_pressure');
+  var thin_distance = get_element('thin_distance');
 
-  if( frm && date_picker && region && size && show_pressure && time_picker ) {
-    frm.action = "{{ url_for('index') }}" 
-      + "plot/" 
-      + date.value + "/" 
-      + time.value + "/" 
-      + region.value + "/" 
-      + (show_pressure.checked ? "with_pressure" : "without_pressure") + "/" 
+  if( frm && date_picker && region && size && show_pressure && time_picker && thin_distance) {
+    frm.action = "{{ url_for('index') }}"
+      + "plot/"
+      + date.value + "/"
+      + time.value + "/"
+      + region.value + "/"
+      + thin_distance.value + "/"
+      + (show_pressure.checked ? "with_pressure" : "without_pressure") + "/"
       + size.value;
   }
 }
 
 // Disable dates later than today
-datePicker = get_element('date');
-if (datePicker) {
-  datePicker.max = today;
+var date_picker = get_element('date');
+if (date_picker) {
+  date_picker.max = today;
+  date_picker.value = today;
+}
+onDateInputChange();
+var time_picker = get_element('time');
+if (time_picker) {
+  time_picker.value = String(hour).padStart(2, '0');
 }
 
 </script>

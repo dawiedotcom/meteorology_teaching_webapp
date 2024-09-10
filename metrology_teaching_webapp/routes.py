@@ -6,7 +6,7 @@ import re
 import io
 import os
 import pandas as pd
-from plot_synops.plot_synops import plot_synops, read_synops
+from plot_synops.metlib import plot_synops, read_synops
 
 pages = FlatPages(app)
 
@@ -28,13 +28,12 @@ def index():
     )
 
 
-@app.route('/plot/<date>/<hour>/<region>/<show_pressure>/<size>')
-def plot(date, hour, region, show_pressure, size):
-    print(date)
-    args = dict(date=date, hour=hour, region=region, show_pressure=show_pressure, size=size)
+@app.route('/plot/<date>/<hour>/<region>/<thin>/<show_pressure>/<size>')
+def plot(date, hour, region, thin, show_pressure, size):
+    args = dict(date=date, hour=hour, region=region, show_pressure=show_pressure, size=size, thin=thin)
 
     ## Generate the file name
-    fig_filename = os.path.join(app.root_path, f'static/figures/{date}/{hour}/{region}/{show_pressure}/{size}.png')
+    fig_filename = os.path.join(app.root_path, f'static/figures/{date}/{hour}/{region}/{thin}/{show_pressure}/{size}.png')
 
     ## Early exit if the figure exits
     if os.path.exists(fig_filename):
@@ -61,6 +60,9 @@ def plot(date, hour, region, show_pressure, size):
     # Calculate the region
     # Default UK and Ireland
     figregion = (-11., 2., 49.0, 61.5)
+    if region == 'scotland':
+        # Adjusted Min/max values from https://data.marine.gov.scot/dataset/annual-cycles-physical-chemical-and-biological-parameters-scottish-waters/resource/7cacbe15
+        figregion = (-9, 0, 55, 61)
 
     # Should pressure be shown
     figpressure = show_pressure == 'with_pressure'
@@ -70,17 +72,18 @@ def plot(date, hour, region, show_pressure, size):
 
     # Retrieve the data
     synops_to_plot, pressure = read_synops(
-        figdate, 
-        region=figregion, 
+        figdate,
+        region=figregion,
         use_midas_csv=False,
         get_pressure=figpressure,
     )
     # Plot the figure
     fig_map_synop,ax = plot_synops(
-        synops_to_plot, 
-        pressure, 
+        synops_to_plot,
+        pressure,
         figsize=figsize,
         region=figregion,
+        thin=float(thin),
     )
     #fig_map_synop.show()
     # Save the figure object as an image

@@ -5,13 +5,13 @@
 {% block content %}
 
 <!--
-<img src=" url_for('static/figures/' + args['date'] + '/' + args['region'] + '/' + args['show_pressure'] + '/' + args['size'] + '.png' ) " />
+<img src=" url_for('static/figures/' + args['date'] + '/' + args['region'] + '/' + args['thin'] + '/' + args['show_pressure'] + '/' + args['size'] + '.png' ) " />
 
 -->
 
 <div class="container">
   <div class="row">
-    <img class="center" src="{{ url_for( 'static', filename='/figures/' + args['date'] + '/' + args['hour'] + '/' +args['region'] + '/' + args['show_pressure'] + '/' + args['size'] + '.png')  }}" />
+    <img class="center" src="{{ url_for( 'static', filename='/figures/' + args['date'] + '/' + args['hour'] + '/' +args['region'] + '/' + args['thin'] + '/' + args['show_pressure'] + '/' + args['size'] + '.png')  }}" />
   </div>
 </div>
 
