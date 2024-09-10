@@ -99,7 +99,7 @@ pint==0.24.3
     # via metpy
 platformdirs==4.2.2
     # via pooch
-plot-synops @ git+https://github.com/dawiedotcom/Meteorology_teaching@1f4c1412fd3440a394e8cb4b2fa55a46fd696617
+plot-synops @ git+https://github.com/dawiedotcom/Meteorology_teaching@a55f34d6497013dd5b5f247a0fd3f12255f73efb
     # via metrology-teaching-webapp (pyproject.toml)
 pluggy==1.5.0
     # via pytest
