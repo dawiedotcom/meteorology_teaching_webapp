@@ -36,10 +36,12 @@
       </div>
 
       <!-- Plot Pressure -->
+      <!--
       <div class="mb-3">
         <label class="form-check-label" for="show_pressure">Plot Pressure</label>
         <input class="form-check-input" type="checkbox" value="" id="show_pressure" checked onchange="onFormInputChange()">
       </div>
+      -->
 
       <!-- Figure Size -->
       <!--
@@ -72,11 +74,19 @@
 <script>
 
 const today = new Date().toISOString().split("T")[0];
-const hour = parseInt(new Date().toISOString().split("T")[1].split(":")[0]);
+const current_hour = parseInt(new Date().toISOString().split("T")[1].split(":")[0]);
 
 function get_element(id) {
   // Wrapper for document.getElementById
   return document.getElementById(id) || null;
+}
+
+function hour_value(hour) {
+  return String(hour).padStart(2, "0");
+}
+
+function hour_text(hour) {
+  return hour_value(hour) + ":00";
 }
 
 function onDateInputChange() {
@@ -89,11 +99,11 @@ function onDateInputChange() {
     while (time_picker.firstChild)
       time_picker.removeChild(time_picker.lastChild);
 
-    const maxHour = (date_picker.value == today) ? (hour) : 23;
-    for (var h=0; h<=maxHour; h++) {
+    const maxHour = (date_picker.value == today) ? (current_hour) : 23;
+    for (var hour=0; hour<=maxHour; hour++) {
         var option = document.createElement("option");
-        option.text = String(h);
-        option.value = String(h).padStart(2, "0");
+        option.text = hour_text(hour);
+        option.value = hour_value(hour);
         time_picker.appendChild(option);
     }
 
@@ -108,17 +118,18 @@ function onFormInputChange() {
   var time_picker = get_element('time');
   var region = get_element('region');
   var size = get_element('size');
-  var show_pressure = get_element('show_pressure');
+  //var show_pressure = get_element('show_pressure');
   var thin_distance = get_element('thin_distance');
 
-  if( frm && date_picker && region && size && show_pressure && time_picker && thin_distance) {
+  if( frm && date_picker && region && size /*&& show_pressure*/ && time_picker && thin_distance) {
     frm.action = "{{ url_for('index') }}"
       + "plot/"
       + date.value + "/"
       + time.value + "/"
       + region.value + "/"
       + thin_distance.value + "/"
-      + (show_pressure.checked ? "with_pressure" : "without_pressure") + "/"
+      //+ (show_pressure.checked ? "with_pressure" : "without_pressure") + "/"
+      + "without_pressure" + "/"
       + size.value;
   }
 }
@@ -132,7 +143,7 @@ if (date_picker) {
 onDateInputChange();
 var time_picker = get_element('time');
 if (time_picker) {
-  time_picker.value = String(hour).padStart(2, '0');
+  time_picker.value = hour_value(current_hour);
 }
 
 </script>
