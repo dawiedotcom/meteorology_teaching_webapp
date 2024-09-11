@@ -22,7 +22,7 @@
 
       <!-- Region -->
       <div class="mb-3">
-        <label for="size" class="form-label">Region</label>
+        <label for="region" class="form-label">Region</label>
         <select class="form-select" aria-label=".form-select" id="region" onchange="onFormInputChange()">
           <option selected value="gb_ireland">Great Britain and Ireland</option>
           <option value="scotland">Scotland</option>
@@ -32,7 +32,7 @@
       <!-- Thinning distance -->
       <div class="mb-3">
         <label class="form-label" for="thin_distance">Thinning Distance (in km)</label>
-        <input class="form-input" type="number" min="10" max="100" value="40" id="thin_distance" checked onchange="onFormInputChange()">
+        <input class="form-input" type="number" min="40" max="200" value="100" id="thin_distance" checked onchange="onFormInputChange()">
       </div>
 
       <!-- Plot Pressure -->
@@ -54,7 +54,7 @@
         </select>
       </div>
       -->
-      <input type="hidden" id="size" value="a3"/>
+      <input type="hidden" id="size" value="a4"/>
 
       <!-- Submit -->
       <button class="btn btn-primary" type="submit">Plot</button>
