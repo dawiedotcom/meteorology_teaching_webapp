@@ -5,6 +5,7 @@ from flask_flatpages import FlatPages
 import re
 import io
 import os
+import time
 import pandas as pd
 from plot_synops.metlib import plot_synops, read_synops
 
@@ -27,21 +28,11 @@ def index():
         navigation=menu_items()
     )
 
+last_api_call = [time.time()]
+rate_limit = 1/2
 
-@app.route('/plot/<date>/<hour>/<region>/<thin>/<show_pressure>/<size>')
-def plot(date, hour, region, thin, show_pressure, size):
-    args = dict(date=date, hour=hour, region=region, show_pressure=show_pressure, size=size, thin=thin)
-
-    ## Generate the file name
-    fig_filename = os.path.join(app.root_path, f'static/figures/{date}/{hour}/{region}/{thin}/{show_pressure}/{size}.png')
-
-    ## Early exit if the figure exits
-    if os.path.exists(fig_filename):
-        return render_template(
-            "plot.html",
-            navigation=menu_items(),
-            args=args,
-        )
+def create_figure(fig_filename, date, hour, region, thin, show_pressure, size):
+    """Creates a synoptic plot"""
 
     ## Create it's direcotry if it does not exist
     fig_dirname = os.path.dirname(fig_filename)
@@ -70,6 +61,21 @@ def plot(date, hour, region, thin, show_pressure, size):
     # Parse time selection to Pandas.Time stamp
     figdate = pd.Timestamp(f'{date}T{hour}')
 
+    # Implement api rate limit
+    now = time.time()
+    if last_api_call[0] + rate_limit > now:
+        sleep_time = last_api_call[0] + rate_limit - now
+        print(f"API limit -- sleeping for {sleep_time} s")
+        last_api_call[0] = last_api_call[0] + rate_limit
+        time.sleep(sleep_time)
+
+        # Figure could have been created during a rate limit wait
+        if os.path.exists(fig_filename):
+            return
+    else:
+        last_api_call[0] = now
+
+
     # Retrieve the data
     synops_to_plot, pressure = read_synops(
         figdate,
@@ -85,9 +91,20 @@ def plot(date, hour, region, thin, show_pressure, size):
         region=figregion,
         thin=float(thin),
     )
-    #fig_map_synop.show()
+
     # Save the figure object as an image
     fig_map_synop.savefig(fig_filename, dpi=300, bbox_inches="tight")
+
+@app.route('/plot/<date>/<hour>/<region>/<thin>/<show_pressure>/<size>')
+def plot(date, hour, region, thin, show_pressure, size):
+    args = dict(date=date, hour=hour, region=region, show_pressure=show_pressure, size=size, thin=thin)
+
+    ## Generate the file name
+    fig_filename = os.path.join(app.root_path, f'static/figures/{date}/{hour}/{region}/{thin}/{show_pressure}/{size}.png')
+
+    ## Create the plot if it does not exist
+    if not os.path.exists(fig_filename):
+        create_figure(fig_filename, date, hour, region, thin, show_pressure, size)
 
     # Done!
     return render_template(
