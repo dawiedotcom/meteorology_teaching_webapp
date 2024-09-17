@@ -1,6 +1,6 @@
 from collections import namedtuple
 from flask import current_app as app
-from flask import render_template, redirect, send_file, redirect
+from flask import render_template, redirect, send_file, redirect, url_for
 from flask_flatpages import FlatPages
 import re
 import io
@@ -108,7 +108,7 @@ def plot(date, hour, region, thin, show_pressure, size):
             create_figure(fig_filename, date, hour, region, thin, show_pressure, size)
         except Exception as e:
             app.logger.exception("Cannot plot figure")
-            return redirect("/no_data")   
+            return redirect(url_for("no_data"))
 
     # Done!
     return render_template(
