@@ -53,7 +53,7 @@ def create_figure(fig_filename, date, hour, region, thin, show_pressure, size):
     figregion = (-11., 2., 49.0, 61.5)
     if region == 'scotland':
         # Adjusted Min/max values from https://data.marine.gov.scot/dataset/annual-cycles-physical-chemical-and-biological-parameters-scottish-waters/resource/7cacbe15
-        figregion = (-9, 0, 55, 61)
+        figregion = (-9, 0, 54.4, 61)
 
     # Should pressure be shown
     figpressure = show_pressure == 'with_pressure'
