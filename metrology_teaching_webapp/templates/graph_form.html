@@ -146,6 +146,23 @@ if (time_picker) {
   time_picker.value = hour_value(current_hour - 1);
 }
 onFormInputChange();
+	
+// Set the validation message for thinning
+var thin_distance = get_element("thin_distance");
+thin_distance.addEventListener("invalid", validate_thinning);
+thin_distance.addEventListener("keyup", validate_thinning);
+
+function validate_thinning() {
+  var val = parseFloat(this.value);
+  var min = parseFloat(this.min);
+  var max = parseFloat(this.max);
+  
+  if (val < min || val > max) {
+    this.setCustomValidity('Thinning distance must be between ' + String(min) + ' and ' + String(max) + '.');
+  } else {
+    this.setCustomValidity("");
+  }
+}
 
 </script>
 {% endblock %}
