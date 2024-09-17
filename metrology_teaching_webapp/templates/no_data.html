@@ -1,0 +1,38 @@
+{% set page = namespace(path = '/') %}
+{% extends "base.html" %}
+
+<!-- Body -->
+{% block content %}
+
+<!--
+<img src=" url_for('static/figures/' + args['date'] + '/' + args['region'] + '/' + args['thin'] + '/' + args['show_pressure'] + '/' + args['size'] + '.png' ) " />
+
+-->
+
+<div class="container">
+  <div class="row">
+    Some of the data required to produce the figure you requested is not available from OGIMET.
+  </div>
+  <div class="row">
+    <a href="{{ url_for('index') }}">Plot something else</a>
+  </div>
+</div>
+
+{% endblock %}
+
+<!-- CSS -->
+{% block css %}
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+}
+</style>
+{% endblock %}
+
+<!-- JS -->
+{% block scripts %}
+
+{% endblock %}

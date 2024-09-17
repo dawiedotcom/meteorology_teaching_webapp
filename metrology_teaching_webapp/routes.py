@@ -1,6 +1,6 @@
 from collections import namedtuple
 from flask import current_app as app
-from flask import render_template, redirect, send_file
+from flask import render_template, redirect, send_file, redirect
 from flask_flatpages import FlatPages
 import re
 import io
@@ -104,11 +104,22 @@ def plot(date, hour, region, thin, show_pressure, size):
 
     ## Create the plot if it does not exist
     if not os.path.exists(fig_filename):
-        create_figure(fig_filename, date, hour, region, thin, show_pressure, size)
+        try:
+            create_figure(fig_filename, date, hour, region, thin, show_pressure, size)
+        except Exception as e:
+            app.logger.exception("Cannot plot figure")
+            return redirect("/no_data")   
 
     # Done!
     return render_template(
         "plot.html",
         navigation=menu_items(),
         args=args,
+    )
+
+@app.route('/no_data')
+def no_data():
+    return render_template(
+        "no_data.html",
+        navigation=menu_items(),
     )
