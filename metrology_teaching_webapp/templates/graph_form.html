@@ -99,7 +99,7 @@ function onDateInputChange() {
     while (time_picker.firstChild)
       time_picker.removeChild(time_picker.lastChild);
 
-    const maxHour = (date_picker.value == today) ? (current_hour) : 23;
+    const maxHour = (date_picker.value == today) ? (current_hour - 1) : 23;
     for (var hour=0; hour<=maxHour; hour++) {
         var option = document.createElement("option");
         option.text = hour_text(hour);
@@ -143,7 +143,7 @@ if (date_picker) {
 onDateInputChange();
 var time_picker = get_element('time');
 if (time_picker) {
-  time_picker.value = hour_value(current_hour);
+  time_picker.value = hour_value(current_hour - 1);
 }
 onFormInputChange();
 
